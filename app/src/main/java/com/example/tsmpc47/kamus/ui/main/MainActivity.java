@@ -1,5 +1,7 @@
 package com.example.tsmpc47.kamus.ui.main;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.tsmpc47.kamus.BR;
@@ -13,6 +15,11 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
     @Inject
     MainViewModel mMainViewModel;
+
+    public static Intent getStartMain(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        return intent;
+    }
 
     @Override
     public int getBindingVariable() {

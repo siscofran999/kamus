@@ -1,22 +1,12 @@
-package com.example.tsmpc47.kamus.data.model.db;
+package com.example.tsmpc47.kamus.data.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+public class Word {
 
-@Entity(tableName = "english")
-public class Eng {
+    int id;
+    String words;
+    String translation;
 
-    @PrimaryKey
-    public int id;
-
-    @ColumnInfo(name = "words")
-    public String words;
-
-    @ColumnInfo(name = "translation")
-    public String translation;
-
-    public Eng(int id, String words, String translation) {
+    public Word(int id, String words, String translation) {
         this.id = id;
         this.words = words;
         this.translation = translation;

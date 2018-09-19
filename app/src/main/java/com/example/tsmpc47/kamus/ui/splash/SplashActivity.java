@@ -9,6 +9,7 @@ import com.example.tsmpc47.kamus.BR;
 import com.example.tsmpc47.kamus.R;
 import com.example.tsmpc47.kamus.databinding.ActivitySplashBinding;
 import com.example.tsmpc47.kamus.ui.base.BaseActivity;
+import com.example.tsmpc47.kamus.ui.main.MainActivity;
 
 import javax.inject.Inject;
 
@@ -49,6 +50,7 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding, SplashVi
 
     @Override
     public void gotoTransleteActivity() {
-        Log.i(TAG, "gotoTransleteActivity: Masuk sini bro");
+        startActivity(MainActivity.getStartMain(this));
+        finish();
     }
 }

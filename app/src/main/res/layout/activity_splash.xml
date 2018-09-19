@@ -15,7 +15,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -30,7 +31,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             tools:progress="@{viewModel.progressObs}"
-            android:progressTint="@color/colorPrimaryDark"
+            android:progressTint="@color/colorAccent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
