@@ -65,15 +65,15 @@
                 android:paddingLeft="10dp"
                 android:background="@drawable/rounded_edittext"
                 android:layout_height="50dp"
-                android:textColor="@color/colorAccent"
-                android:textColorHint="@color/colorAccent"/>
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:text="@string/search"
                 android:background="@drawable/rounded_btn"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorAccent"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp" />
 
