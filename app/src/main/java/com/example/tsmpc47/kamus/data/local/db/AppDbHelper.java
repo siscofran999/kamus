@@ -2,6 +2,7 @@ package com.example.tsmpc47.kamus.data.local.db;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
@@ -12,7 +13,7 @@ import com.example.tsmpc47.kamus.data.model.Word;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.SQLException;
+import android.database.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 
+import static android.provider.BaseColumns._ID;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsEngInd.RESULT_WORD_ENG_IND;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsEngInd.SEARCH_WORD_ENG_IND;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.TABLE_NAME_ENG_IND;
@@ -72,6 +74,34 @@ public class AppDbHelper implements DbHelper {
     public AppDbHelper openDB() throws SQLException {
         mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
         return this;
+    }
+
+    @Override
+    public void closeDb() {
+        mDatabaseHelper.close();
+    }
+
+    @Override
+    public Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord) {
+        Cursor cursor = mSQLiteDatabase.query(tableName,null, searchWord +" LIKE ?",
+                new String[]{word + "%"},null,null,_ID + " ASC",null);
+        cursor.moveToFirst();
+        final ArrayList<Word> arrayList = new ArrayList<>();
+        Word words;
+        if (cursor.getCount() > 0) {
+            do {
+                words = new Word();
+                words.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
+                words.setWords(cursor.getString(cursor.getColumnIndexOrThrow(SEARCH_WORD_ENG_IND)));
+                words.setTranslation(cursor.getString(cursor.getColumnIndexOrThrow(RESULT_WORD_ENG_IND)));
+
+                arrayList.add(words);
+                cursor.moveToNext();
+
+            } while (!cursor.isAfterLast());
+        }
+        cursor.close();
+        return Observable.fromCallable(() -> arrayList);
     }
 
     private void insertTransaction(Word word) {

@@ -8,7 +8,7 @@ import com.example.tsmpc47.kamus.data.local.db.DbHelper;
 import com.example.tsmpc47.kamus.data.local.prefs.PreferencesHelper;
 import com.example.tsmpc47.kamus.data.model.Word;
 
-import java.sql.SQLException;
+import android.database.SQLException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -40,6 +40,16 @@ public class AppDataManager implements DataManager {
     @Override
     public AppDbHelper openDB() throws SQLException {
         return mDbHelper.openDB();
+    }
+
+    @Override
+    public void closeDb() {
+        mDbHelper.closeDb();
+    }
+
+    @Override
+    public Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord) {
+        return mDbHelper.getBySearchWord(word,tableName,searchWord);
     }
 
     @Override

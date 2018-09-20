@@ -6,6 +6,8 @@ public class Word {
     String words;
     String translation;
 
+    public Word() {}
+
     public Word(int id, String words, String translation) {
         this.id = id;
         this.words = words;

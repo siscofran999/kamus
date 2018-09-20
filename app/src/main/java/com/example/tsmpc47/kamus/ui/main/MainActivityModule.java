@@ -5,8 +5,11 @@ import android.support.v7.widget.LinearLayoutManager;
 
 import com.example.tsmpc47.kamus.ViewModelProviderFactory;
 import com.example.tsmpc47.kamus.data.DataManager;
+import com.example.tsmpc47.kamus.data.model.Word;
 import com.example.tsmpc47.kamus.ui.splash.SplashViewModel;
 import com.example.tsmpc47.kamus.utils.rx.SchedulerProvider;
+
+import java.util.ArrayList;
 
 import dagger.Module;
 import dagger.Provides;
@@ -22,6 +25,11 @@ public class MainActivityModule {
     @Provides
     LinearLayoutManager provideSearchLinearLayoutManager(MainActivity activity) {
         return new LinearLayoutManager(activity);
+    }
+
+    @Provides
+    MainAdapter provideMainAdapter() {
+        return new MainAdapter(new ArrayList<Word>());
     }
 
     @Provides

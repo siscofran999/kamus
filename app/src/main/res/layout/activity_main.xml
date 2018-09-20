@@ -59,6 +59,7 @@
             android:layout_margin="10dp">
 
             <EditText
+                android:id="@+id/edtSearch"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:hint="@string/input_here"
@@ -69,13 +70,15 @@
                 android:textColorHint="@color/colorPrimaryDark"/>
 
             <Button
+                android:id="@+id/search"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:text="@string/search"
                 android:background="@drawable/rounded_btn"
                 android:textColor="@color/colorAccent"
                 android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp" />
+                android:layout_marginLeft="5dp"
+                android:onClick="@{() -> viewModel.onSearchClicked()}"/>
 
         </LinearLayout>
 
@@ -91,7 +94,9 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:Adapter="@{viewModel.KamusObservableArrayList}"
+                />
 
         </android.support.v7.widget.CardView>
 
