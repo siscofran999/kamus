@@ -44,26 +44,49 @@ public class AppDbHelper implements DbHelper {
     @Override
     public Observable<List<Word>> fetchDatabaseEngInd() {
         return Observable.create(emitter -> {
-            List<Word> wordList = preLoadRaw();
+            List<Word> wordList = preLoadRawEngInd();
+            Log.i(TAG, "fetchDatabaseEngInd: "+wordList.size());
             openDB();
             beginTransaction();
-            for (Word word: wordList) {
-                insertTransaction(word);
+            try {
+                for (Word word: wordList) {
+                    insertTransaction(word);
+                }
+                mSQLiteDatabase.setTransactionSuccessful();
+            }catch (Exception e){
+                Log.e(TAG, "fetchDatabaseEngInd: "+e.getMessage());
             }
-            endTransactionEngInd();
-            closeEngInd();
+
+            mSQLiteDatabase.endTransaction();
+            mDatabaseHelper.close();
 
             emitter.onNext(wordList);
             emitter.onComplete();
         });
     }
 
-    private void closeEngInd() {
-        mDatabaseHelper.close();
-    }
+    @Override
+    public Observable<List<Word>> fetchDatabaseIndEng() {
+        return Observable.create(emitter -> {
+            List<Word> wordList = preLoadRawIndEng();
+            Log.i(TAG, "fetchDatabaseIndEng: "+wordList.size());
+            openDB();
+            beginTransaction();
+            try {
+                for (Word word: wordList) {
+                    insertTransaction(word);
+                }
+                mSQLiteDatabase.setTransactionSuccessful();
+            }catch (Exception e){
+                Log.e(TAG, "fetchDatabaseEngInd: "+e.getMessage());
+            }
 
-    private void endTransactionEngInd() {
-        mSQLiteDatabase.endTransaction();
+            mSQLiteDatabase.endTransaction();
+            mDatabaseHelper.close();
+
+            emitter.onNext(wordList);
+            emitter.onComplete();
+        });
     }
 
     private void beginTransaction() {
@@ -83,9 +106,15 @@ public class AppDbHelper implements DbHelper {
 
     @Override
     public Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord) {
+
+        Log.i(TAG, "Word: "+word);
+        Log.i(TAG, "Table Name: "+tableName);
+        Log.i(TAG, "Search Word: "+searchWord);
+
         Cursor cursor = mSQLiteDatabase.query(tableName,null, searchWord +" LIKE ?",
                 new String[]{word + "%"},null,null,_ID + " ASC",null);
         cursor.moveToFirst();
+        Log.i(TAG, "getBySearchWord: "+cursor.getCount());
         final ArrayList<Word> arrayList = new ArrayList<>();
         Word words;
         if (cursor.getCount() > 0) {
@@ -94,6 +123,8 @@ public class AppDbHelper implements DbHelper {
                 words.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
                 words.setWords(cursor.getString(cursor.getColumnIndexOrThrow(SEARCH_WORD_ENG_IND)));
                 words.setTranslation(cursor.getString(cursor.getColumnIndexOrThrow(RESULT_WORD_ENG_IND)));
+
+                Log.i(TAG, "getBySearchWord: "+cursor.getString(cursor.getColumnIndexOrThrow(SEARCH_WORD_ENG_IND)));
 
                 arrayList.add(words);
                 cursor.moveToNext();
@@ -114,13 +145,38 @@ public class AppDbHelper implements DbHelper {
         stmt.clearBindings();
     }
 
-    private List<Word> preLoadRaw() {
+    private List<Word> preLoadRawEngInd() {
         ArrayList<Word> words = new ArrayList<>();
-        String line = null;
+        String line;
         BufferedReader reader;
         try {
             Resources res = mContext.getResources();
             InputStream raw_dict = res.openRawResource(R.raw.english_indonesia);
+            reader = new BufferedReader(new InputStreamReader(raw_dict));
+            int count = 0;
+            do {
+                line = reader.readLine();
+                if (line != null){
+                    String[] splitStr = line.split("\t");
+                    Word word = new Word(count,splitStr[0],splitStr[1]);
+                    words.add(word);
+                }
+                count++;
+            }while (line != null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Log.i(TAG, "preLoadRaw: "+words.size());
+        return words;
+    }
+
+    private List<Word> preLoadRawIndEng() {
+        ArrayList<Word> words = new ArrayList<>();
+        String line;
+        BufferedReader reader;
+        try {
+            Resources res = mContext.getResources();
+            InputStream raw_dict = res.openRawResource(R.raw.indonesia_english);
             reader = new BufferedReader(new InputStreamReader(raw_dict));
             int count = 0;
             do {

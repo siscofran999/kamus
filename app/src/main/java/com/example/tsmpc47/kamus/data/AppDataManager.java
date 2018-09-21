@@ -38,6 +38,11 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
+    public Observable<List<Word>> fetchDatabaseIndEng() {
+        return mDbHelper.fetchDatabaseIndEng();
+    }
+
+    @Override
     public AppDbHelper openDB() throws SQLException {
         return mDbHelper.openDB();
     }

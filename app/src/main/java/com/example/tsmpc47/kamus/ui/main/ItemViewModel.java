@@ -14,6 +14,6 @@ public class ItemViewModel {
         this.mPost = position;
         this.mWord = word;
 
-        searchText.set(mWord.getTranslation());
+        searchText.set(mWord.getWords());
     }
 }

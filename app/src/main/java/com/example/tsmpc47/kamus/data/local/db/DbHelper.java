@@ -11,6 +11,8 @@ public interface DbHelper {
 
     Observable<List<Word>> fetchDatabaseEngInd();
 
+    Observable<List<Word>> fetchDatabaseIndEng();
+
     AppDbHelper openDB() throws SQLException;
 
     void closeDb();

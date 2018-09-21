@@ -6,11 +6,15 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.tsmpc47.kamus.data.DataManager;
+import com.example.tsmpc47.kamus.data.model.Word;
 import com.example.tsmpc47.kamus.ui.base.BaseViewModel;
 import com.example.tsmpc47.kamus.utils.rx.SchedulerProvider;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class SplashViewModel extends BaseViewModel<SplashNavigator>{
 
@@ -38,15 +42,33 @@ public class SplashViewModel extends BaseViewModel<SplashNavigator>{
 
         if (start){
             showProgress.set(View.VISIBLE);
-            getCompositeDisposable().add(getDataManager().fetchDatabaseEngInd()
-                    .subscribeOn(getSchedulerProvider().io())
-                    .observeOn(getSchedulerProvider().ui())
-                    .subscribe(words -> {
+
+            Observable<Boolean> insertEngInd = getDataManager().fetchDatabaseEngInd()
+                    .map(words -> {
+                        Log.i(TAG, "loadDB: Ini load 1");
                         for (int i = 0; i < words.size(); i++) {
-                            if (i % 100 == 0 || i == words.size()){
+                            if (i % 50 == 0 || i == words.size()){
                                 progressObs.set(i);
                             }
                         }
+                        return words.size() > 0;
+                    });
+
+            Observable<Boolean> insertIndEng = getDataManager().fetchDatabaseIndEng()
+                    .map(words -> {
+                        Log.i(TAG, "loadDB: Ini load 2");
+                        for (int i = 0; i < words.size(); i++) {
+                            if (i % 50 == 0 || i == words.size()){
+                                progressObs.set(i);
+                            }
+                        }
+                        return words.size() > 0;
+                    });
+
+            getCompositeDisposable().add(Observable.merge(insertEngInd,insertIndEng)
+                    .subscribeOn(getSchedulerProvider().io())
+                    .observeOn(getSchedulerProvider().ui())
+                    .subscribe(Boolean -> {
                         showProgress.set(View.INVISIBLE);
                         getNavigator().gotoTransleteActivity();
                     }, throwable -> Log.e(TAG, "accept: "+throwable.getMessage())));

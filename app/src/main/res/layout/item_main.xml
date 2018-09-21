@@ -22,6 +22,7 @@
             android:layout_marginRight="@dimen/spacing_medium"
             android:layout_marginTop="@dimen/spacing_medium"
             android:layout_marginBottom="@dimen/spacing_medium"
+            android:textColor="@color/colorAccent"
             tools:text="@{viewModel.searchText}"/>
 
     </RelativeLayout>

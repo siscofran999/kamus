@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 
 import com.example.tsmpc47.kamus.BR;
 import com.example.tsmpc47.kamus.R;
@@ -38,6 +39,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     private MainViewModel mMainViewModel;
 
     private ActivityMainBinding mActivityMainBinding;
+    private static final String TAG = "MainActivity";
 
     public static Intent getStartMain(Context context){
         Intent intent = new Intent(context, MainActivity.class);
@@ -91,12 +93,23 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
 
     @Override
     public void onSearchClicked() {
-        String word = mActivityMainBinding.search.getText().toString().trim();
-        if (!word.isEmpty()) {
-            mMainViewModel.setSingleSearch(word.toUpperCase());
+        String word = mActivityMainBinding.edtSearch.getText().toString().trim();
+        Log.i(TAG, "onSearchClicked: "+word);
+        if (!word.equals("")) {
+            Log.i(TAG, "masuk if: "+word);
+            mMainViewModel.setSingleSearch(word);
             mActivityMainBinding.edtSearch.setText("");
-            //mIndEngAdapter.clearItems();
+            mMainAdapter.clearItems();
             hideKeyboard();
+        }else{
+            Log.i(TAG, "masuk else: "+word);
         }
+    }
+
+    @Override
+    public void wipeText() {
+        mActivityMainBinding.edtSearch.setText("");
+        mActivityMainBinding.resultEdt.setText("");
+        mMainAdapter.clearItems();
     }
 }

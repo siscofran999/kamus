@@ -27,8 +27,8 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
     private static final String TAG = "MainViewModel";
     private Boolean typeWord;
     public ObservableField<String> searchObs = new ObservableField<>("English");
-    public ObservableInt showEngInd;
-    public ObservableInt showIndEng;
+    public ObservableField<String> resultObs = new ObservableField<>("Indonesian");
+    public ObservableInt showVisibility;
     public ObservableField<String> resultText = new ObservableField<>("");
     private final ObservableArrayList<Word> kamusObservableArrayList = new ObservableArrayList<>();
     private final MutableLiveData<List<Word>> kamusListLiveData;
@@ -36,8 +36,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
     public MainViewModel(DataManager dataManager, SchedulerProvider schedulerProvider) {
         super(dataManager, schedulerProvider);
         kamusListLiveData = new MutableLiveData<>();
-        showEngInd = new ObservableInt();
-        showIndEng = new ObservableInt();
+        showVisibility = new ObservableInt();
         typeWord = false;
     }
 
@@ -54,27 +53,45 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
         );
     }
 
+    public void switchLanguage() {
+        getNavigator().wipeText();
+        typeWord =! typeWord;
+        if (typeWord == true) {
+            searchObs.set("Indonesian");
+            resultObs.set("English");
+
+            Log.i(TAG, "switchLanguage: ENG");
+
+        } else if (typeWord == false) {
+            searchObs.set("English");
+            resultObs.set("Indonesian");
+
+            Log.i(TAG, "switchLanguage: IND");
+        }
+    }
+
     public void setSingleSearch(String word) {
-        if (searchObs.get().equals("ENG")) {
+        if (searchObs.get().equals("English")) {
+            Log.i(TAG, "setSingleSearch: Eng : "+word);
             setSingleSearchEngInd(word);
 
-        } else if (searchObs.get().equals("IND")) {
+        } else if (searchObs.get().equals("Indonesian")) {
             setSingleSearchIndEng(word);
+            Log.i(TAG, "setSingleSearch: IND : "+word);
         }
     }
 
     public void setTypeWord(String word) {
-        if (searchObs.get().equals("ENG")) {
-
-            showEngInd.set(View.VISIBLE);
-            showIndEng.set(View.INVISIBLE);
+        Log.i(TAG, "setTypeWord: "+word);
+        if (searchObs.get().equals("English")) {
+            Log.i(TAG, "setTypeWord: ENG");
+            showVisibility.set(View.VISIBLE);
 
             setSearchEngInd(word);
 
-        } else if (searchObs.get().equals("IND")) {
-
-            showEngInd.set(View.INVISIBLE);
-            showIndEng.set(View.VISIBLE);
+        } else if (searchObs.get().equals("Indonesian")) {
+            Log.i(TAG, "setTypeWord: Indonesian");
+            showVisibility.set(View.INVISIBLE);
 
             setSearchIndEng(word);
         }
@@ -128,6 +145,8 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
                     String search = words.get(0).getWords();
                     String result = words.get(0).getTranslation();
 
+                    Log.i(TAG, "setSingleSearchEngInd: "+words.get(0).getTranslation());
+
                     resultText.set(search + " : \n" + result);
                 }, throwable ->
                         Log.e(TAG, "accept: "+throwable.getMessage())));
@@ -135,6 +154,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
     }
 
     public void onSearchClicked() {
+        Log.i(TAG, "onSearchClicked: click btn");
         getNavigator().onSearchClicked();
     }
 

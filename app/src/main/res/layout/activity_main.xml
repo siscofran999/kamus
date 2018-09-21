@@ -32,13 +32,15 @@
                     android:gravity="center|start"
                     android:layout_weight="1"
                     android:textColor="@color/colorAccent"
+                    tools:text="@{viewModel.searchObs}"
                     android:textSize="20sp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_swap_horiz_black_24dp"/>
+                    android:src="@drawable/ic_swap_horiz_black_24dp"
+                    android:onClick="@{() -> viewModel.switchLanguage()}"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -47,6 +49,7 @@
                     android:gravity="center|end"
                     android:text="Indonesian"
                     android:textColor="@color/colorAccent"
+                    tools:text="@{viewModel.resultObs}"
                     android:textSize="20sp" />
 
             </LinearLayout>
@@ -94,9 +97,33 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
+                android:visibility="@{viewModel.showVisibility}"
                 tools:Adapter="@{viewModel.KamusObservableArrayList}"
                 />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_medium"
+            android:layout_marginRight="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:layout_marginBottom="@dimen/spacing_medium">
+
+            <TextView
+                android:id="@+id/result_edt"
+                android:text="@string/result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
+                android:layout_marginLeft="@dimen/spacing_medium"
+                android:layout_marginRight="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                tools:text="@{viewModel.resultText}"/>
 
         </android.support.v7.widget.CardView>
 
