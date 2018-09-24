@@ -17,7 +17,9 @@ import com.jakewharton.rxbinding2.widget.RxTextView;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsEngInd.RESULT_WORD_ENG_IND;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsEngInd.SEARCH_WORD_ENG_IND;
+import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsIndEng.RESULT_WORD_IND_ENG;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsIndEng.SEARCH_WORD_IND_ENG;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.TABLE_NAME_ENG_IND;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.TABLE_NAME_IND_ENG;
@@ -99,31 +101,36 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
 
     private void setSearchIndEng(String word) {
         getDataManager().openDB();
-        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_IND_ENG, SEARCH_WORD_IND_ENG)
+        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_IND_ENG, SEARCH_WORD_IND_ENG, RESULT_WORD_IND_ENG)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(words -> {
                     kamusListLiveData.setValue(words);
+                    for (int i = 0; i < words.size(); i++) {
+                        Log.i(TAG, "setSearchIndEng: "+words.get(i).getWords());
+                        Log.i(TAG, "setSearchIndEng: "+words.get(i).getTranslation());
+                    }
+                    getNavigator().setRc();
                 }, throwable ->
-                        Log.e(TAG, "accept: "+throwable.getMessage())));
+                        Log.e(TAG, "acceptIND: "+throwable.getMessage())));
         getDataManager().closeDb();
     }
 
     private void setSearchEngInd(String word) {
         getDataManager().openDB();
-        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_ENG_IND, SEARCH_WORD_ENG_IND)
+        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_ENG_IND, SEARCH_WORD_ENG_IND, RESULT_WORD_ENG_IND)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(words -> {
                     kamusListLiveData.setValue(words);
                 }, throwable ->
-                        Log.e(TAG, "accept: "+throwable.getMessage())));
+                        Log.e(TAG, "acceptENG: "+throwable.getMessage())));
         getDataManager().closeDb();
     }
 
     private void setSingleSearchIndEng(String word) {
         getDataManager().openDB();
-        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_IND_ENG, SEARCH_WORD_IND_ENG)
+        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_IND_ENG, SEARCH_WORD_IND_ENG, RESULT_WORD_IND_ENG)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(words -> {
@@ -138,7 +145,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
 
     private void setSingleSearchEngInd(String word) {
         getDataManager().openDB();
-        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_ENG_IND, SEARCH_WORD_ENG_IND)
+        getCompositeDisposable().add(getDataManager().getBySearchWord(word,TABLE_NAME_ENG_IND, SEARCH_WORD_ENG_IND, RESULT_WORD_ENG_IND)
                 .subscribeOn(getSchedulerProvider().io())
                 .observeOn(getSchedulerProvider().ui())
                 .subscribe(words -> {

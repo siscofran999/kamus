@@ -53,8 +53,8 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord) {
-        return mDbHelper.getBySearchWord(word,tableName,searchWord);
+    public Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord, String resultWord) {
+        return mDbHelper.getBySearchWord(word,tableName,searchWord, resultWord);
     }
 
     @Override

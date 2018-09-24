@@ -4,4 +4,6 @@ public interface MainNavigator {
     void onSearchClicked();
 
     void wipeText();
+
+    void setRc();
 }

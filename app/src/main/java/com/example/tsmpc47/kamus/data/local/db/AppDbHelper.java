@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import android.database.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,7 +26,10 @@ import io.reactivex.Observable;
 import static android.provider.BaseColumns._ID;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsEngInd.RESULT_WORD_ENG_IND;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsEngInd.SEARCH_WORD_ENG_IND;
+import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsIndEng.RESULT_WORD_IND_ENG;
+import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.KamusColumnsIndEng.SEARCH_WORD_IND_ENG;
 import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.TABLE_NAME_ENG_IND;
+import static com.example.tsmpc47.kamus.data.local.db.DatabaseContract.TABLE_NAME_IND_ENG;
 
 @Singleton
 public class AppDbHelper implements DbHelper {
@@ -50,7 +54,7 @@ public class AppDbHelper implements DbHelper {
             beginTransaction();
             try {
                 for (Word word: wordList) {
-                    insertTransaction(word);
+                    insertTransaction(word,true);
                 }
                 mSQLiteDatabase.setTransactionSuccessful();
             }catch (Exception e){
@@ -74,7 +78,7 @@ public class AppDbHelper implements DbHelper {
             beginTransaction();
             try {
                 for (Word word: wordList) {
-                    insertTransaction(word);
+                    insertTransaction(word,false);
                 }
                 mSQLiteDatabase.setTransactionSuccessful();
             }catch (Exception e){
@@ -105,7 +109,7 @@ public class AppDbHelper implements DbHelper {
     }
 
     @Override
-    public Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord) {
+    public Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord, String resultWord) {
 
         Log.i(TAG, "Word: "+word);
         Log.i(TAG, "Table Name: "+tableName);
@@ -121,10 +125,10 @@ public class AppDbHelper implements DbHelper {
             do {
                 words = new Word();
                 words.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
-                words.setWords(cursor.getString(cursor.getColumnIndexOrThrow(SEARCH_WORD_ENG_IND)));
-                words.setTranslation(cursor.getString(cursor.getColumnIndexOrThrow(RESULT_WORD_ENG_IND)));
+                words.setWords(cursor.getString(cursor.getColumnIndexOrThrow(searchWord)));
+                words.setTranslation(cursor.getString(cursor.getColumnIndexOrThrow(resultWord)));
 
-                Log.i(TAG, "getBySearchWord: "+cursor.getString(cursor.getColumnIndexOrThrow(SEARCH_WORD_ENG_IND)));
+                Log.i(TAG, "getBySearchWord: "+cursor.getString(cursor.getColumnIndexOrThrow(searchWord)));
 
                 arrayList.add(words);
                 cursor.moveToNext();
@@ -135,9 +139,15 @@ public class AppDbHelper implements DbHelper {
         return Observable.fromCallable(() -> arrayList);
     }
 
-    private void insertTransaction(Word word) {
-        String sql = "INSERT INTO "+ TABLE_NAME_ENG_IND +" ("+ SEARCH_WORD_ENG_IND +", "+ RESULT_WORD_ENG_IND
-                +") VALUES (?, ?)";
+    private void insertTransaction(Word word, Boolean english) {
+        String sql;
+        if (english){
+            sql = "INSERT INTO "+ TABLE_NAME_ENG_IND +" ("+ SEARCH_WORD_ENG_IND +", "+ RESULT_WORD_ENG_IND
+                    +") VALUES (?, ?)";
+        }else{
+            sql = "INSERT INTO "+ TABLE_NAME_IND_ENG +" ("+ SEARCH_WORD_IND_ENG +", "+ RESULT_WORD_IND_ENG
+                    +") VALUES (?, ?)";
+        }
         SQLiteStatement stmt = mSQLiteDatabase.compileStatement(sql);
         stmt.bindString(1, word.getWords());
         stmt.bindString(2, word.getTranslation());

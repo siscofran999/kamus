@@ -112,4 +112,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         mActivityMainBinding.resultEdt.setText("");
         mMainAdapter.clearItems();
     }
+
+    @Override
+    public void setRc() {
+        Log.i(TAG, "setRc: ");
+        subscribeToLiveData();
+    }
 }

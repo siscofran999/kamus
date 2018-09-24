@@ -15,13 +15,13 @@ public class DatabaseContract {
 
         public static String SEARCH_WORD_ENG_IND = "search_word_engind";
 
-        static String RESULT_WORD_ENG_IND = "result_word_engind";
+        public static String RESULT_WORD_ENG_IND = "result_word_engind";
     }
 
     public static final class KamusColumnsIndEng implements BaseColumns {
 
         public static String SEARCH_WORD_IND_ENG = "search_word_indeng";
 
-        static String RESULT_WORD_IND_ENG = "result_word_indeng";
+        public static String RESULT_WORD_IND_ENG = "result_word_indeng";
     }
 }

@@ -19,7 +19,6 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding, SplashVi
     SplashViewModel mSplashViewModel;
 
     ActivitySplashBinding mActivitySplashBinding;
-    private static final String TAG = "SplashActivity";
 
     public static Intent getStartIntent(Context context) {
         Intent intent = new Intent(context, SplashActivity.class);
@@ -31,6 +30,7 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding, SplashVi
         super.onCreate(savedInstanceState);
         mActivitySplashBinding = getViewDataBinding();
         mSplashViewModel.setNavigator(this);
+        mSplashViewModel.startProgress();
     }
 
     @Override

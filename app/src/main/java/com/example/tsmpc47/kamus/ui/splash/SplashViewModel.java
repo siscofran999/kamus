@@ -26,31 +26,24 @@ public class SplashViewModel extends BaseViewModel<SplashNavigator>{
     public SplashViewModel(DataManager dataManager, SchedulerProvider schedulerProvider) {
         super(dataManager, schedulerProvider);
 
-        startProgress();
     }
 
-    private void startProgress() {
+    public void startProgress() {
         showProgress = new ObservableInt();
         showProgress.set(View.INVISIBLE);
 
         loadDB();
     }
 
-    @SuppressLint("CheckResult")
     private void loadDB() {
         Boolean start = getDataManager().getFirstRun();
-
+        Log.i(TAG, "loadDB: "+start);
         if (start){
             showProgress.set(View.VISIBLE);
 
             Observable<Boolean> insertEngInd = getDataManager().fetchDatabaseEngInd()
                     .map(words -> {
                         Log.i(TAG, "loadDB: Ini load 1");
-                        for (int i = 0; i < words.size(); i++) {
-                            if (i % 50 == 0 || i == words.size()){
-                                progressObs.set(i);
-                            }
-                        }
                         return words.size() > 0;
                     });
 
@@ -69,10 +62,16 @@ public class SplashViewModel extends BaseViewModel<SplashNavigator>{
                     .subscribeOn(getSchedulerProvider().io())
                     .observeOn(getSchedulerProvider().ui())
                     .subscribe(Boolean -> {
-                        showProgress.set(View.INVISIBLE);
-                        getNavigator().gotoTransleteActivity();
-                    }, throwable -> Log.e(TAG, "accept: "+throwable.getMessage())));
 
+                    }, throwable -> Log.e(TAG, "accept: "+throwable.getMessage()),
+                        () -> {
+                            showProgress.set(View.INVISIBLE);
+                            getDataManager().setFirstRun(false);
+                            getNavigator().gotoTransleteActivity();
+                        }));
+
+        }else{
+            getNavigator().gotoTransleteActivity();
         }
     }
 }

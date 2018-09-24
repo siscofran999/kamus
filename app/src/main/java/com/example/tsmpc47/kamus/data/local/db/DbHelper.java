@@ -17,6 +17,6 @@ public interface DbHelper {
 
     void closeDb();
 
-    Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord);
+    Observable<List<Word>> getBySearchWord(String word, String tableName, String searchWord, String resultWord);
 
 }
