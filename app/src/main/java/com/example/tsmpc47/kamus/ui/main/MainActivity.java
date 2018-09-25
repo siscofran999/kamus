@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import io.reactivex.functions.Predicate;
 
-public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator {
+public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewModel> implements MainNavigator, MainAdapter.ItemResultClickListener {
 
     @Inject
     ViewModelProvider.Factory mViewModelFactory;
@@ -56,18 +56,21 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
         setUp();
         setUpRx();
         subscribeToLiveData();
+
+        mMainAdapter.setItemResultClickListener(this);
     }
 
-    private void subscribeToLiveData() {
-        mMainViewModel.getKamusListLiveData().observe(this, words ->
-                mMainViewModel.addlistItemsToList(words));
+    @Override
+    public void subscribeToLiveData() {
+        mMainViewModel.getKamusListLiveData().observe(this, words -> mMainViewModel.addlistItemsToList(words));
     }
 
     private void setUpRx() {
         mMainViewModel.setEdt(mActivityMainBinding.edtSearch);
     }
 
-    private void setUp() {
+    @Override
+    public void setUp() {
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mActivityMainBinding.rc.setLayoutManager(mLayoutManager);
@@ -114,8 +117,10 @@ public class MainActivity extends BaseActivity<ActivityMainBinding, MainViewMode
     }
 
     @Override
-    public void setRc() {
-        Log.i(TAG, "setRc: ");
-        subscribeToLiveData();
+    public void onItemResultEngIndClicked(List<Word> words, int post) {
+        String search = words.get(post).getWords();
+        String result = words.get(post).getTranslation();
+
+        mActivityMainBinding.resultEdt.setText(search + " : \n" + result);
     }
 }

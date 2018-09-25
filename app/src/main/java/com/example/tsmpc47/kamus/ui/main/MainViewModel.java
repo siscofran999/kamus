@@ -87,13 +87,11 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
         Log.i(TAG, "setTypeWord: "+word);
         if (searchObs.get().equals("English")) {
             Log.i(TAG, "setTypeWord: ENG");
-            showVisibility.set(View.VISIBLE);
 
             setSearchEngInd(word);
 
         } else if (searchObs.get().equals("Indonesian")) {
             Log.i(TAG, "setTypeWord: Indonesian");
-            showVisibility.set(View.INVISIBLE);
 
             setSearchIndEng(word);
         }
@@ -108,9 +106,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
                     kamusListLiveData.setValue(words);
                     for (int i = 0; i < words.size(); i++) {
                         Log.i(TAG, "setSearchIndEng: "+words.get(i).getWords());
-                        Log.i(TAG, "setSearchIndEng: "+words.get(i).getTranslation());
                     }
-                    getNavigator().setRc();
                 }, throwable ->
                         Log.e(TAG, "acceptIND: "+throwable.getMessage())));
         getDataManager().closeDb();
@@ -152,7 +148,7 @@ public class MainViewModel extends BaseViewModel<MainNavigator> {
                     String search = words.get(0).getWords();
                     String result = words.get(0).getTranslation();
 
-                    Log.i(TAG, "setSingleSearchEngInd: "+words.get(0).getTranslation());
+                    Log.i(TAG, "setSingleSearchEngInd: "+words.get(0).getWords());
 
                     resultText.set(search + " : \n" + result);
                 }, throwable ->
